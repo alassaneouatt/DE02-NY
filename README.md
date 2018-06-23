@@ -199,9 +199,9 @@ So, for each table to transfert, we will create two type of data transfert.
 ```
 sqoop job --meta-connect jdbc:hsqldb:hsql://sandbox.hortonworks.com:16000/sqoop --create branch_allData -- import 
 --connect jdbc:mysql://localhost/CDW_SAPP --driver com.mysql.jdbc.Driver 
---query "SELECT BRANCH_CODE, BRANCH_NAME, BRANCH_STREET, BRANCH_CITY, BRANCH_STATE, CASE WHEN BRANCH_ZIP is null then 999999 
-ELSE BRANCH_ZIP END AS BRANCH_ZIP, CONCAT('(',RIGHT(BRANCH_PHONE,3),')', MID(BRANCH_PHONE,4,3),'-', LEFT(BRANCH_PHONE,4)) 
-AS BRANCH_PHONE, LAST_UPDATED FROM CDW_SAPP_BRANCH WHERE \$CONDITIONS" -m 1 
+--query "SELECT BRANCH_CODE, BRANCH_NAME, BRANCH_STREET, BRANCH_CITY, BRANCH_STATE, CASE WHEN BRANCH_ZIP is null
+ then 999999 ELSE BRANCH_ZIP END AS BRANCH_ZIP, CONCAT('(',RIGHT(BRANCH_PHONE,3),')', MID(BRANCH_PHONE,4,3),'-', 
+LEFT(BRANCH_PHONE,4)) AS BRANCH_PHONE, LAST_UPDATED FROM CDW_SAPP_BRANCH WHERE \$CONDITIONS" -m 1 
 --delete-target-dir --target-dir /user/Credit_Card_System/CDW_SAPP_BRANCH/ --fields-terminated-by ','
 ```
 
@@ -210,9 +210,9 @@ AS BRANCH_PHONE, LAST_UPDATED FROM CDW_SAPP_BRANCH WHERE \$CONDITIONS" -m 1
 ```
 sqoop job --meta-connect jdbc:hsqldb:hsql://sandbox.hortonworks.com:16000/sqoop --create customer_newData -- import 
 --connect jdbc:mysql://localhost/CDW_SAPP --driver com.mysql.jdbc.Driver 
---query "SELECT CAST(SSN AS UNSIGNED INTEGER) AS SSN, CONCAT(UPPER(LEFT(FIRST_NAME,1)), LOWER(SUBSTRING(FIRST_NAME,2))) AS FIRST_NAME,
-LOWER(MIDDLE_NAME) AS MIDDLE_NAME, CONCAT(UPPER(LEFT(LAST_NAME,1)), LOWER(SUBSTRING(LAST_NAME,2))) AS LAST_NAME,
-CREDIT_CARD_NO, CONCAT(APT_NO,',', STREET_NAME) AS STREET_NAME_APT_NO,
+--query "SELECT CAST(SSN AS UNSIGNED INTEGER) AS SSN, CONCAT(UPPER(LEFT(FIRST_NAME,1)), LOWER(SUBSTRING(FIRST_NAME,2)))
+ AS FIRST_NAME, LOWER(MIDDLE_NAME) AS MIDDLE_NAME, CONCAT(UPPER(LEFT(LAST_NAME,1)), LOWER(SUBSTRING(LAST_NAME,2))) 
+AS LAST_NAME, CREDIT_CARD_NO, CONCAT(APT_NO,',', STREET_NAME) AS STREET_NAME_APT_NO,
 CUST_CITY, CUST_STATE, CUST_COUNTRY, CAST(CUST_ZIP AS UNSIGNED INTEGER) AS CUST_ZIP, CONCAT(RIGHT(CUST_PHONE,3),'-', 
 MID(CUST_PHONE,4,4)) AS CUST_PHONE,CUST_EMAIL, LAST_UPDATED FROM CDW_SAPP_CUSTOMER WHERE \$CONDITIONS" -m 1 
 --incremental lastmodified --target-dir /user/Credit_Card_System/CDW_SAPP_CUSTOMER/ 
@@ -261,11 +261,13 @@ oozie job -oozie http://sandbox.hortonworks.com:11000/oozie -config /home/maria_
 
 2.	Execute the following command to run oozie coordinator
 ```
-oozie job -oozie http://sandbox.hortonworks.com:11000/oozie -config /home/maria_dev/oozie_jobs/job_coord.properties
+oozie job -oozie http://sandbox.hortonworks.com:11000/oozie 
+ -config /home/maria_dev/oozie_jobs/job_coord.properties
 ```
 
 3.	Execute the following command to run oozie coordinator optimization
 ```
-oozie job -oozie http://sandbox.hortonworks.com:11000/oozie -config /home/maria_dev/oozie_jobs/job_coord_opt.properties
+oozie job -oozie http://sandbox.hortonworks.com:11000/oozie 
+ -config /home/maria_dev/oozie_jobs/job_coord_opt.properties
 ```
 
