@@ -358,8 +358,8 @@ LEFT(BRANCH_PHONE,4)) AS BRANCH_PHONE, LAST_UPDATED FROM CDW_SAPP_BRANCH WHERE \
 2.	CDW_SAPP_CUSTOMER New Data transfer example  
 
 ```
-sqoop job --meta-connect jdbc:hsqldb:hsql://sandbox.hortonworks.com:16000/sqoop --create customer_newData -- import 
---connect jdbc:mysql://localhost/CDW_SAPP --driver com.mysql.jdbc.Driver 
+sqoop job --meta-connect jdbc:hsqldb:hsql://sandbox.hortonworks.com:16000/sqoop --create customer_newData 
+-- import --connect jdbc:mysql://localhost/CDW_SAPP --driver com.mysql.jdbc.Driver 
 --query "SELECT CAST(SSN AS UNSIGNED INTEGER) AS SSN, CONCAT(UPPER(LEFT(FIRST_NAME,1)), 
 LOWER(SUBSTRING(FIRST_NAME,2))) AS FIRST_NAME, LOWER(MIDDLE_NAME) AS MIDDLE_NAME, CONCAT(UPPER(LEFT(LAST_NAME,1)),
  LOWER(SUBSTRING(LAST_NAME,2))) AS LAST_NAME, CREDIT_CARD_NO, CONCAT(APT_NO,',', STREET_NAME) 
