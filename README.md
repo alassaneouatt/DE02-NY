@@ -292,7 +292,7 @@ Oozie workflow.xml example:
 
 
     <!-- Create an external table CDW_SAPP_F_CREDIT_CARD_EXT in hive
-  		Create an internal table CDW_SAPP_F_CREDIT_CARD in hive and load data using 
+  	Create an internal table CDW_SAPP_F_CREDIT_CARD in hive and load data using 
         the external table CDW_SAPP_F_CREDIT_CARD_EXT  -->
     <action name="CDW_SAPP_F_CREDIT_CARD_DATA">
       <hive xmlns="uri:oozie:hive-action:0.4">
@@ -306,7 +306,7 @@ Oozie workflow.xml example:
 
 
     <!-- Create an external table CDW_SAPP_D_TIME_EXT in hive
-		Create an internal table CDW_SAPP_D_TIME in hive and load data using 
+	Create an internal table CDW_SAPP_D_TIME in hive and load data using 
         the external table CDW_SAPP_D_TIME_EXT -->
     <action name="CDW_SAPP_D_TIME_DATA">
       <hive xmlns="uri:oozie:hive-action:0.4">
