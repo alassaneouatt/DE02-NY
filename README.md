@@ -187,7 +187,10 @@ Oozie workflow.xml example:
   <sqoop xmlns="uri:oozie:sqoop-action:0.4">
     <job-tracker>${jobTracker}</job-tracker>
     <name-node>${nameNode}</name-node>
-    <!--Delete CDW_SAPP_BRANCH, CDW_SAPP_CUSTOMER, CDW_SAPP_CREDITCARD, CDW_SAPP_TIME directories before running the sqoop job, this directry will be created again during the execution of the sqoop job --> 
+    <!--Delete CDW_SAPP_BRANCH, CDW_SAPP_CUSTOMER, CDW_SAPP_CREDITCARD, 
+       CDW_SAPP_TIME directories before running the sqoop job, 
+       this directry will be created again during the execution of 
+       the sqoop job --> 
     <prepare>
       <delete path="${sqoopData}/CDW_SAPP_BRANCH"/>
       <delete path="${sqoopData}/CDW_SAPP_CUSTOMER"/>
@@ -200,7 +203,8 @@ Oozie workflow.xml example:
          <value>${queueName}</value>
       </property>
     </configuration>
-    <!-- Get data from mysql using sqoop job and store data in /user/Credit_Card_System/CDW_SAPP_BRANCH directory  -->
+    <!-- Get data from mysql using sqoop job and store data in 
+        /user/Credit_Card_System/CDW_SAPP_BRANCH directory  -->
     <command>${sqoop_job} branch_allData </command>
     
   </sqoop>
@@ -264,7 +268,7 @@ Oozie workflow.xml example:
 
 
     <!-- Create an external table CDW_SAPP_D_BRANCH_EXT in hive
- 		Create an internal table CDW_SAPP_D_BRANCH in hive and load data using 
+ 	Create an internal table CDW_SAPP_D_BRANCH in hive and load data using 
         the external table CDW_SAPP_D_BRANCH_EXT  -->
     <action name="CDW_SAPP_D_BRANCH_DATA">
       <hive xmlns="uri:oozie:hive-action:0.4">
@@ -278,7 +282,7 @@ Oozie workflow.xml example:
 
 
     <!-- Create an external table CDW_SAPP_D_CUSTOMER_EXT in hive
- 		Create an internal table CDW_SAPP_D_CUSTOMER in hive and load data using 
+ 	Create an internal table CDW_SAPP_D_CUSTOMER in hive and load data using 
         the external table CDW_SAPP_D_CUSTOMER_EXT  -->
     <action name="CDW_SAPP_D_CUSTOMER_DATA">
       <hive xmlns="uri:oozie:hive-action:0.4">
@@ -326,7 +330,8 @@ Oozie workflow.xml example:
 ```
 
 
-4.	Upload the following oozie configuration file for sqoop job in `/user/oozie/share/lib/lib_20161025075203/sqoop/` directory using Hortonworks Sandbox.
+4.	Upload the following oozie configuration file for sqoop job in 
+  `/user/oozie/share/lib/lib_20161025075203/sqoop/` directory using Hortonworks Sandbox.
 
 ```
 /user/oozie/share/lib/lib_20161025075203/sqoop/java-json.jar
