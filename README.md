@@ -175,6 +175,156 @@ workflow1.xml
 coordinatoropt.xml
 workflowopt.xml
 ```
+Oozie workflow.xml example:
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This is a comment -->
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="first_Workflow">
+  <start to="branch_allData"/>
+ 
+ <action name="branch_allData">
+  <sqoop xmlns="uri:oozie:sqoop-action:0.4">
+    <job-tracker>${jobTracker}</job-tracker>
+    <name-node>${nameNode}</name-node>
+    <!--Delete CDW_SAPP_BRANCH, CDW_SAPP_CUSTOMER, CDW_SAPP_CREDITCARD, CDW_SAPP_TIME directories before running the sqoop job, this directry will be created again during the execution of the sqoop job --> 
+    <prepare>
+      <delete path="${sqoopData}/CDW_SAPP_BRANCH"/>
+      <delete path="${sqoopData}/CDW_SAPP_CUSTOMER"/>
+      <delete path="${sqoopData}/CDW_SAPP_CREDITCARD"/>
+      <delete path="${sqoopData}/CDW_SAPP_TIME"/>
+     </prepare>
+         <configuration>
+      <property>
+         <name>mapred.job.queue.name</name>
+         <value>${queueName}</value>
+      </property>
+    </configuration>
+    <!-- Get data from mysql using sqoop job and store data in /user/Credit_Card_System/CDW_SAPP_BRANCH directory  -->
+    <command>${sqoop_job} branch_allData </command>
+    
+  </sqoop>
+  <ok to="customer_allData" />
+  <error to="kill_job" />
+ </action>
+
+   <action name="customer_allData">
+    <sqoop xmlns="uri:oozie:sqoop-action:0.4">
+      <job-tracker>${jobTracker}</job-tracker>
+      <name-node>${nameNode}</name-node>
+      <configuration>
+        <property>
+           <name>mapred.job.queue.name</name>
+           <value>${queueName}</value>
+        </property>
+      </configuration>
+      <!-- Get data from mysql using sqoop job and store data in 
+          /user/Credit_Card_System/CDW_SAPP_CUSTOMER directory -->
+      <command>${sqoop_job} customer_allData</command>
+    </sqoop>
+    <ok to="creditcard_allData" />
+    <error to="kill_job" />
+   </action>
+
+   <action name="creditcard_allData">
+    <sqoop xmlns="uri:oozie:sqoop-action:0.4">
+      <job-tracker>${jobTracker}</job-tracker>
+      <name-node>${nameNode}</name-node>
+      <configuration>
+        <property>
+           <name>mapred.job.queue.name</name>
+           <value>${queueName}</value>
+        </property>
+      </configuration>
+      <!-- Get data from mysql using sqoop job and store data in 
+          /user/Credit_Card_System/CDW_SAPP_CREDITCARD/  directory -->
+      <command>${sqoop_job} creditcard_allData</command>
+    </sqoop>
+    <ok to="timetable_allData" />
+    <error to="kill_job" />
+   </action>
+  
+   <action name="timetable_allData">
+    <sqoop xmlns="uri:oozie:sqoop-action:0.4">
+      <job-tracker>${jobTracker}</job-tracker>
+      <name-node>${nameNode}</name-node>
+      <configuration>
+        <property>
+           <name>mapred.job.queue.name</name>
+           <value>${queueName}</value>
+        </property>
+      </configuration>
+      <!-- Get data from mysql using sqoop job and store data in 
+          /user/Credit_Card_System/CDW_SAPP_TIME/  directory -->
+      <command>${sqoop_job} timetable_allData</command>
+    </sqoop>
+    <ok to="CDW_SAPP_D_BRANCH_DATA" />
+    <error to="kill_job" />
+   </action>
+
+
+    <!-- Create an external table CDW_SAPP_D_BRANCH_EXT in hive
+ 		Create an internal table CDW_SAPP_D_BRANCH in hive and load data using 
+        the external table CDW_SAPP_D_BRANCH_EXT  -->
+    <action name="CDW_SAPP_D_BRANCH_DATA">
+      <hive xmlns="uri:oozie:hive-action:0.4">
+        <job-tracker>${jobTracker}</job-tracker>
+        <name-node>${nameNode}</name-node>
+        <script>${hiveScripts}/CDW_SAPP_D_BRANCH_DATA.HIVE</script>
+      </hive>
+      <ok to="CDW_SAPP_D_CUSTOMER_DATA" />
+      <error to="kill_job" />
+    </action>
+
+
+    <!-- Create an external table CDW_SAPP_D_CUSTOMER_EXT in hive
+ 		Create an internal table CDW_SAPP_D_CUSTOMER in hive and load data using 
+        the external table CDW_SAPP_D_CUSTOMER_EXT  -->
+    <action name="CDW_SAPP_D_CUSTOMER_DATA">
+      <hive xmlns="uri:oozie:hive-action:0.4">
+        <job-tracker>${jobTracker}</job-tracker>
+        <name-node>${nameNode}</name-node>
+        <script>${hiveScripts}/CDW_SAPP_D_CUSTOMER_DATA.HIVE</script>
+      </hive>
+      <ok to="CDW_SAPP_F_CREDIT_CARD_DATA" />
+      <error to="kill_job" />
+    </action>
+
+
+    <!-- Create an external table CDW_SAPP_F_CREDIT_CARD_EXT in hive
+  		Create an internal table CDW_SAPP_F_CREDIT_CARD in hive and load data using 
+        the external table CDW_SAPP_F_CREDIT_CARD_EXT  -->
+    <action name="CDW_SAPP_F_CREDIT_CARD_DATA">
+      <hive xmlns="uri:oozie:hive-action:0.4">
+        <job-tracker>${jobTracker}</job-tracker>
+        <name-node>${nameNode}</name-node>
+        <script>${hiveScripts}/CDW_SAPP_F_CREDIT_CARD_DATA.HIVE</script>
+      </hive>
+      <ok to="CDW_SAPP_D_TIME_DATA" />
+      <error to="kill_job" />
+    </action>
+
+
+    <!-- Create an external table CDW_SAPP_D_TIME_EXT in hive
+		Create an internal table CDW_SAPP_D_TIME in hive and load data using 
+        the external table CDW_SAPP_D_TIME_EXT -->
+    <action name="CDW_SAPP_D_TIME_DATA">
+      <hive xmlns="uri:oozie:hive-action:0.4">
+        <job-tracker>${jobTracker}</job-tracker>
+        <name-node>${nameNode}</name-node>
+        <script>${hiveScripts}/CDW_SAPP_D_TIME_DATA.HIVE</script>
+      </hive>
+      <ok to="end" />
+      <error to="kill_job" />
+    </action>
+
+ <kill name="kill_job">
+  <message>Job failed</message>
+ </kill>
+ <end name="end" />
+</workflow-app>
+```
+
 
 4.	Upload the following oozie configuration file for sqoop job in `/user/oozie/share/lib/lib_20161025075203/sqoop/` directory using Hortonworks Sandbox.
 
