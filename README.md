@@ -8,10 +8,10 @@ And Hadoop Ecosystem queries, scripts and jobs to visualize, process and analyze
 
 To get this project up and running on your local machine, you will need to install:
 
-1.	Eclipse Java EE IDE (Oxygen) with java 1.8,                            
-2.	Install a Linux virtual machine 
-3.	Hadoop Ecosystem with Sqoop, Hive, Oozie, and Pig (Hortonworks sandbox).
-4.	Install Mysql Workbench on your virtual machine
+1.	[Eclipse Java EE IDE (Oxygen) with java 1.8](http://www.eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/oxygen3a),                            
+2.	Install a Linux virtual machine [(CentOS)](https://www.centos.org/download/) or other linux distribution
+3.	Hadoop Ecosystem with Sqoop, Hive, Oozie, and Pig [(Hortonworks sandbox)](https://hortonworks.com/products/sandbox/?utm_source=google&utm_medium=cpc&utm_campaign=hw_sandbox&gclid=Cj0KCQjw37fZBRD3ARIsAJihSr0gGnpqPHK97e-aPT_xUj5OWtequ2jQ-lArPV5Vy3AlTXKJnW2aG38aAvy_EALw_wcB).
+4.	Install [Mysql Workbench](https://dev.mysql.com/downloads/workbench/8.0.html) on your virtual machine
 
 ### Prerequisites
 
@@ -27,7 +27,7 @@ We assume that
 Mysql driver is provided in the java project zip file. It's located under jar directory. 
 If you need to use other database than Mysql, so you need to provide the driver and setup the project build path with that driver.
 	
-The properties file [`db.properties`]() located in the project classpth (under `src` directory) 
+The properties file `db.properties` located in the project classpth (under `src` directory) 
 content the parameters of your database. Each property must be in form `DatabaseReference.paramName=paramValue'. 
 
 To setup your database, you need to define the properties: 
@@ -57,33 +57,33 @@ To Import the java zip file
 * The Main program is in the package `com.cdw.runner` named `MenuCDW.java`
 
 3.	Java project package 
-The project content six package.
+The project content seven package.
 * Package `com.cdw.dao` content the data access objects.
-  ConnectionDAO.java: Abstract class ConnectionDAO define the protocol to establish and close the connection to the database. 
-  DBProperties.java: Get the database parameters from DBProperties. Manage the properties file in order to get the database parameters. 
-  CustomerDAO.java: Manage data request at the data access layer for customer details module.
-  TransactionDAO.java: Manage data request at the data access layer for transaction details module.
+  `ConnectionDAO.java`: Abstract class ConnectionDAO define the protocol to establish and close the connection to the database. 
+  `DBProperties.java`: Get the database parameters from DBProperties. Manage the properties file in order to get the database parameters. 
+  `CustomerDAO.java`: Manage data request at the data access layer for customer details module.
+  `TransactionDAO.java`: Manage data request at the data access layer for transaction details module.
 
 * Package `com.cdw.model` content the data model class
-  Ttransaction.java: Define the transaction model class for the transaction details module
-  Customer.java: Define the customer model class for the customer details module
+  `Ttransaction.java`: Define the transaction model class for the transaction details module
+  `Customer.java`: Define the customer model class for the customer details module
 
 * Package `com.cdw.blo` content the business logic objects or service layer. It's between presentation layer and data access layer. 
-  CustomerBLO.java: Get the data request from the presentation object to the data access object for customer details module.
-  TransactionBLO.java: Get the data request from the presentation object to the data access object for transaction details module.
+  `CustomerBLO.java`: Get the data request from the presentation object to the data access object for customer details module.
+  `TransactionBLO.java`: Get the data request from the presentation object to the data access object for transaction details module.
 * Package `com.cdw.exceptions` content the exception class used to manage the application exception
-  DBConfigException.java: Implement RuntimeException. This class is used to manage the application exception.
+  `DBConfigException.java`: Implement RuntimeException. This class is used to manage the application exception.
 
 * Package `com.cdw.constants` content the application constant classes
-  Queries.java: Content SQL queries 
-  ViewData.java: Content screen display related constants
+  `Queries.java`: Content SQL queries 
+  `ViewData.java`: Content screen display related constants
 
 * Package `com.cdw.controller` content presentation classes
- SimpleMenu.java: Content data and methods to manage the main menu
- InOutController.java: Content methods to display data on the console screen 
+ `SimpleMenu.java`: Content data and methods to manage the main menu
+ `InOutController.java`: Content methods to display data on the console screen 
 
 * Package `com.cdw.runner` content the main program
- MenuCDW.java: Main class of the application
+ `MenuCDW.java`: Main class of the application
 
 4.	 Java documentation the this application is stored under `doc` folder.
 
@@ -96,14 +96,15 @@ The project content six package.
 CDW_SAPP_routines.sql
 CDW_SAPP_CDW_SAPP_CREDITCARD.sql
 CDW_SAPP_CDW_SAPP_BRANCH.sql
+CDW_SAPP_CDW_SAPP_CUSTOMER.sql
 ```
  
 ### Hosts file
-Edit your hosts file to map the hostname `sandbox.hortonworks.com` to you computer IP Address.
+Edit your `hosts` file to map the hostname `sandbox.hortonworks.com` to you computer IP Address.
 
 ### Install WinSCP on your computer 
 
-Download and install WinSCP in your computer. This tool will allow you to copy files from your computer to the virtual machine.
+Download and install [WinSCP](https://winscp.net/eng/download.php) in your computer. This tool will allow you to copy files from your computer to the virtual machine.
 
 ### Vitual machine local system
 
@@ -119,7 +120,7 @@ jobs1.properties
 jobs_coord.properties
 jobs_coord_opt.properties
 ```
-3.	Copy files to your virtual machine in the folder `/home/maria_dev/ sqoop_scripts`
+3.	Copy files to your virtual machine in the folder `/home/maria_dev/sqoop_scripts`
 
 ```
 sqoop_jobs_opt_metastore.sh
@@ -136,7 +137,7 @@ sqoop metastore
 * Open an other terminal and execute the following command to make all sqoop jobs available for execution
 
 ```
-cd `/home/maria_dev/ sqoop_scripts`
+cd /home/maria_dev/ sqoop_scripts
 chmod +x sqoop_jobs_opt_metastore.sh
 chmod +x sqoop_jobs_metaconnect.sh
 ./sqoop_jobs_metaconnect.sh
@@ -196,29 +197,33 @@ So, for each table to transfert, we will create two type of data transfert.
 1.	CDW_SAPP_BRANCH All Data transfer example 
 
 ```
-sqoop job --meta-connect jdbc:hsqldb:hsql://sandbox.hortonworks.com:16000/sqoop --create branch_allData -- import --connect jdbc:mysql://localhost/CDW_SAPP 
---driver com.mysql.jdbc.Driver 
---query "SELECT BRANCH_CODE, BRANCH_NAME, BRANCH_STREET, BRANCH_CITY, BRANCH_STATE, CASE WHEN BRANCH_ZIP is null then 999999 ELSE BRANCH_ZIP END AS BRANCH_ZIP, 
-CONCAT('(',RIGHT(BRANCH_PHONE,3),')', MID(BRANCH_PHONE,4,3),'-', LEFT(BRANCH_PHONE,4)) AS BRANCH_PHONE, LAST_UPDATED FROM CDW_SAPP_BRANCH WHERE \$CONDITIONS" -m 1 
+sqoop job --meta-connect jdbc:hsqldb:hsql://sandbox.hortonworks.com:16000/sqoop --create branch_allData -- import 
+--connect jdbc:mysql://localhost/CDW_SAPP --driver com.mysql.jdbc.Driver 
+--query "SELECT BRANCH_CODE, BRANCH_NAME, BRANCH_STREET, BRANCH_CITY, BRANCH_STATE, CASE WHEN BRANCH_ZIP is null then 999999 
+ELSE BRANCH_ZIP END AS BRANCH_ZIP, CONCAT('(',RIGHT(BRANCH_PHONE,3),')', MID(BRANCH_PHONE,4,3),'-', LEFT(BRANCH_PHONE,4)) 
+AS BRANCH_PHONE, LAST_UPDATED FROM CDW_SAPP_BRANCH WHERE \$CONDITIONS" -m 1 
 --delete-target-dir --target-dir /user/Credit_Card_System/CDW_SAPP_BRANCH/ --fields-terminated-by ','
 ```
 
 2.	CDW_SAPP_CUSTOMER New Data transfer example  
 
 ```
-sqoop job --meta-connect jdbc:hsqldb:hsql://sandbox.hortonworks.com:16000/sqoop --create customer_newData -- import --connect jdbc:mysql://localhost/CDW_SAPP 
---driver com.mysql.jdbc.Driver --query "SELECT CAST(SSN AS UNSIGNED INTEGER) AS SSN, CONCAT(UPPER(LEFT(FIRST_NAME,1)), LOWER(SUBSTRING(FIRST_NAME,2))) AS FIRST_NAME,
+sqoop job --meta-connect jdbc:hsqldb:hsql://sandbox.hortonworks.com:16000/sqoop --create customer_newData -- import 
+--connect jdbc:mysql://localhost/CDW_SAPP --driver com.mysql.jdbc.Driver 
+--query "SELECT CAST(SSN AS UNSIGNED INTEGER) AS SSN, CONCAT(UPPER(LEFT(FIRST_NAME,1)), LOWER(SUBSTRING(FIRST_NAME,2))) AS FIRST_NAME,
 LOWER(MIDDLE_NAME) AS MIDDLE_NAME, CONCAT(UPPER(LEFT(LAST_NAME,1)), LOWER(SUBSTRING(LAST_NAME,2))) AS LAST_NAME,
 CREDIT_CARD_NO, CONCAT(APT_NO,',', STREET_NAME) AS STREET_NAME_APT_NO,
-CUST_CITY, CUST_STATE, CUST_COUNTRY, CAST(CUST_ZIP AS UNSIGNED INTEGER) AS CUST_ZIP, CONCAT(RIGHT(CUST_PHONE,3),'-', MID(CUST_PHONE,4,4)) AS CUST_PHONE,
-CUST_EMAIL, LAST_UPDATED FROM CDW_SAPP_CUSTOMER WHERE \$CONDITIONS" -m 1 --incremental lastmodified --target-dir /user/Credit_Card_System/CDW_SAPP_CUSTOMER/ 
+CUST_CITY, CUST_STATE, CUST_COUNTRY, CAST(CUST_ZIP AS UNSIGNED INTEGER) AS CUST_ZIP, CONCAT(RIGHT(CUST_PHONE,3),'-', 
+MID(CUST_PHONE,4,4)) AS CUST_PHONE,CUST_EMAIL, LAST_UPDATED FROM CDW_SAPP_CUSTOMER WHERE \$CONDITIONS" -m 1 
+--incremental lastmodified --target-dir /user/Credit_Card_System/CDW_SAPP_CUSTOMER/ 
 --check-column LAST_UPDATED --last-value 2018-06-04 --merge-key SSN,CREDIT_CARD_NO --fields-terminated-by '\t'
 ```
 
 ### Hive partition
 
 All data imported by sqoop in Hadoop hdfs will be handle by Hive using dynamic partition. For each table to transfer, 
-we will create one hive external table to reference each data directory, and one dynamic partitioned internal table to transfer that data to Hive warehouse.  
+we will create one hive external table to reference each data directory, and one dynamic partitioned internal table to
+transfer that data to Hive warehouse.  
 
 1.	CDW_SAPP_D_TIME external table
 
@@ -226,7 +231,8 @@ we will create one hive external table to reference each data directory, and one
 CREATE DATABASE IF NOT EXISTS CASE_STUDY;
 USE CASE_STUDY;
 CREATE EXTERNAL TABLE IF NOT EXISTS CASE_STUDY.CDW_SAPP_D_TIME_EXT 
-(TIMEID  String, DAY int, MONTH Int, QUARTER String, YEAR Int, TRANSACTION_ID INT) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','  
+(TIMEID  String, DAY int, MONTH Int, QUARTER String, YEAR Int, TRANSACTION_ID INT) 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','  
 location '/user/Credit_Card_System/CDW_SAPP_TIME';
 ```
 
